@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-book Tecnológico Bilíngue | Libras + Português</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- IMPORTA O CSS CORRETAMENTE -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#" onclick="showPage('home')">
+      <div class="nav-icon">📖</div>
+      <div class="nav-title">
+        <strong>E-book Tecnológico Bilíngue</strong>
+        <span>Libras · Português</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="active" id="nav-inicio" onclick="showPage('home');return false;">Início</a>
+      <a href="#" id="nav-vocab" onclick="showPage('home');return false;">Vocabulário</a>
+      <a href="#" id="nav-sobre" onclick="showPage('about');return false;">Sobre</a>
+      <a href="#" id="nav-access" onclick="showPage('access');return false;">Acessibilidade</a>
+    </div>
+    <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('home');toggleMenu();return false;">🏠 Início</a>
+  <a href="#" onclick="showPage('about');toggleMenu();return false;">ℹ️ Sobre</a>
+  <a href="#" onclick="showPage('access');toggleMenu();return false;">♿ Acessibilidade</a>
+</div>
+
+<!-- ══════════ HOME PAGE ══════════ -->
+<div id="home-page">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">✋ Libras + Português</div>
+      <h1>Vocabulário de <span>TI & Engenharia</span><br>de Software em Libras</h1>
+      <p>Material de apoio bilíngue com definições simples e vídeos em Língua Brasileira de Sinais para estudantes surdos e ouvintes.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" id="total-count">30</div><div class="stat-label">Termos disponíveis</div></div>
+        <div class="stat"><div class="stat-num">5</div><div class="stat-label">Categorias</div></div>
+        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Gratuito & acessível</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar-wrap">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar um termo... (ex: algoritmo, API, banco de dados)" oninput="filterWords()">
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">Filtrar por categoria</div>
+    <div class="filter-pills" id="filterPills">
+      <div class="pill active" onclick="setFilter('Todos',this)">Todos</div>
+      <div class="pill" onclick="setFilter('Fundamentos',this)">Fundamentos</div>
+      <div class="pill" onclick="setFilter('Redes',this)">Redes & Internet</div>
+      <div class="pill" onclick="setFilter('Engenharia',this)">Engenharia de Software</div>
+      <div class="pill" onclick="setFilter('Dados',this)">Dados & Banco</div>
+      <div class="pill" onclick="setFilter('IA',this)">IA & Tecnologia</div>
+    </div>
+  </div>
+
+  <div class="vocab-section">
+    <div class="section-header">
+      <span class="section-title">Todos os termos</span>
+      <span class="count-badge" id="displayCount">30 termos</span>
+    </div>
+    <div class="vocab-grid" id="vocabGrid"></div>
+    <div class="no-results" id="noResults" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      <p>Nenhum termo encontrado para a busca.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DETAIL PAGE ══════════ -->
+<div id="detail-page">
+  <div style="background:white; border-bottom: 1px solid var(--gray-200); padding: .75rem 1.5rem;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Voltar ao vocabulário
+      </button>
+    </div>
+  </div>
+
+  <div class="detail-layout">
+    <div class="detail-left">
+      <div class="detail-tag" id="d-cat"></div>
+      <h2 class="detail-word" id="d-word"></h2>
+      <span class="lang-pill">🇧🇷 Português</span>
+      <button class="audio-pill" onclick="speakWord()" title="Ouvir pronúncia">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        Ouvir
+      </button>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="setTab('definicao',this)">Definição</button>
+        <button class="tab-btn" onclick="setTab('exemplo',this)">
+          <svg style="width:13px;height:13px;stroke:currentColor;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Exemplo
+        </button>
+        <button class="tab-btn" onclick="setTab('libras',this)">✋ Ver em Libras</button>
+      </div>
+
+      <div class="tab-content active" id="tab-definicao">
+        <div class="definition-box">
+          <p id="d-def"></p>
+          <div class="saiba-mais">
+            <div class="saiba-mais-icon">💡</div>
+            <div><strong>Saiba mais</strong><small id="d-extra"></small></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-exemplo">
+        <div class="example-box"><p id="d-example"></p></div>
+      </div>
+      <div class="tab-content" id="tab-libras">
+        <div class="definition-box">
+          <p style="color:var(--gray-600);font-size:14px;text-align:center;padding:1rem 0;">
+            ✋ Assista ao vídeo em Libras no painel ao lado (ou abaixo, no celular).<br>
+            <span style="color:var(--teal-dark);font-weight:600;">Use o QR Code para abrir no seu dispositivo.</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="related-section">
+        <div class="related-title">Termos relacionados</div>
+        <div class="related-chips" id="d-related"></div>
+      </div>
+    </div>
+
+    <div class="detail-right">
+      <div class="video-card">
+        <div class="video-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          <span>Vídeo em Libras</span>
+        </div>
+        <div class="video-placeholder" id="videoPlaceholder" onclick="openVideo()">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+          </div>
+        </div>
+        <div class="video-label">
+          <span id="videoTime">0:00 / 0:28</span>
+          <div class="video-controls">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="11 19 2 12 11 5 11 19"/><line x1="22" y1="5" x2="22" y2="19"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="13 19 22 12 13 5 13 19"/><line x1="2" y1="5" x2="2" y2="19"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="qr-card">
+        <div class="qr-img">
+          <svg viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="7" height="7" rx="1" fill="var(--navy)"/>
+            <rect x="2" y="2" width="5" height="5" fill="white"/>
+            <rect x="3" y="3" width="3" height="3" fill="var(--navy)"/>
+            <rect x="13" y="1" width="7" height="7" rx="1" fill="var(--navy)"/>
+            <rect x="14" y="2" width="5" height="5" fill="white"/>
+            <rect x="15" y="3" width="3" height="3" fill="var(--navy)"/>
+            <rect x="1" y="13" width="7" height="7" rx="1" fill="var(--navy)"/>
+            <rect x="2" y="14" width="5" height="5" fill="white"/>
+            <rect x="3" y="15" width="3" height="3" fill="var(--navy)"/>
+            <rect x="9" y="1" width="2" height="2" fill="var(--navy)"/>
+            <rect x="11" y="3" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="5" width="2" height="2" fill="var(--navy)"/>
+            <rect x="11" y="7" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="9" width="2" height="2" fill="var(--navy)"/>
+            <rect x="11" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="13" y="9" width="2" height="2" fill="var(--navy)"/>
+            <rect x="15" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="17" y="9" width="2" height="2" fill="var(--navy)"/>
+            <rect x="19" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="13" width="2" height="2" fill="var(--navy)"/>
+            <rect x="11" y="15" width="2" height="2" fill="var(--navy)"/>
+            <rect x="13" y="13" width="2" height="2" fill="var(--navy)"/>
+            <rect x="15" y="15" width="2" height="2" fill="var(--navy)"/>
+            <rect x="17" y="17" width="2" height="2" fill="var(--navy)"/>
+            <rect x="19" y="13" width="2" height="2" fill="var(--navy)"/>
+            <rect x="1" y="9" width="2" height="2" fill="var(--navy)"/>
+            <rect x="3" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="5" y="9" width="2" height="2" fill="var(--navy)"/>
+            <rect x="7" y="11" width="2" height="2" fill="var(--navy)"/>
+          </svg>
+        </div>
+        <div class="qr-text">
+          <strong>Acesse pelo QR Code</strong>
+          <p>Escaneie para assistir este termo em Libras no seu dispositivo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT PAGE ══════════ -->
+<div id="about-page">
+  <div class="about-inner">
+    <h2>Sobre o projeto</h2>
+    <p>O <strong>E-book Tecnológico Bilíngue</strong> é um material de apoio online que reúne os principais termos da área de <strong>Tecnologia da Informação</strong> e <strong>Engenharia de Software</strong>, com definições simples em português e vídeos em Língua Brasileira de Sinais (Libras).</p>
+    <p>O objetivo é tornar o conhecimento tecnológico acessível a estudantes surdos, intérpretes de Libras, professores e qualquer pessoa que queira aprender TI de forma bilíngue e inclusiva.</p>
+
+    <div class="about-card">
+      <div class="about-icon">✋</div>
+      <div>
+        <h3>Acessibilidade em Libras</h3>
+        <p>Cada termo conta com um vídeo explicativo em Libras gravado por intérpretes qualificados, além de QR Code para acesso rápido pelo celular.</p>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">📖</div>
+      <div>
+        <h3>Definições simples e claras</h3>
+        <p>As definições foram escritas com linguagem acessível, sem jargões desnecessários, facilitando a compreensão de estudantes de todos os níveis.</p>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">🔍</div>
+      <div>
+        <h3>Busca e filtro por categoria</h3>
+        <p>Encontre rapidamente o termo que procura com a busca em tempo real ou filtre por categoria: Fundamentos, Redes, Engenharia, Dados e IA.</p>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="about-icon">📱</div>
+      <div>
+        <h3>Responsivo para celular e desktop</h3>
+        <p>O site funciona perfeitamente em qualquer dispositivo — do celular à tela grande — sem necessidade de instalar nenhum aplicativo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ACESSIBILIDADE PAGE ══════════ -->
+<div id="access-page">
+  <div class="access-inner">
+    <h2 style="font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:.75rem">Acessibilidade</h2>
+    <p style="font-size:15px;color:var(--gray-600);line-height:1.8">Configure o site de acordo com suas necessidades de leitura.</p>
+    <div style="margin-top:1.5rem">
+      <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem">Tamanho da fonte</p>
+      <div class="font-controls">
+        <button class="font-btn" onclick="changeFontSize(14)">A pequeno</button>
+        <button class="font-btn" onclick="changeFontSize(16)">A médio</button>
+        <button class="font-btn" onclick="changeFontSize(18)">A grande</button>
+        <button class="font-btn" onclick="changeFontSize(20)">A maior</button>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem">Recursos disponíveis</p>
+      <div class="about-card">
+        <div class="about-icon">🔊</div>
+        <div>
+          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Leitura em voz alta</h3>
+          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Na página de cada termo, clique no botão <strong>"Ouvir"</strong> para ouvir a pronúncia da palavra pelo navegador.</p>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">✋</div>
+        <div>
+          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Vídeos em Libras</h3>
+          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Todos os termos possuem vídeo em Libras. Use o QR Code para abrir o vídeo diretamente no seu celular.</p>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">🔍</div>
+        <div>
+          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Busca por voz</h3>
+          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Em dispositivos compatíveis, use o microfone do teclado para ditar o termo que deseja buscar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>E-book Tecnológico Bilíngue</strong> · Libras + Português · Material educacional gratuito</p>
+</footer>
+
+<script src="./script.js"></script>  
+</body>
+</html>
