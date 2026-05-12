@@ -22,7 +22,6 @@
     </a>
     <div class="nav-links">
       <a href="#" class="active" id="nav-inicio" onclick="showPage('home');return false;">Início</a>
-      <a href="#" id="nav-vocab" onclick="showPage('home');return false;">Vocabulário</a>
       <a href="#" id="nav-sobre" onclick="showPage('about');return false;">Sobre</a>
       <a href="#" id="nav-access" onclick="showPage('access');return false;">Acessibilidade</a>
     </div>
@@ -48,7 +47,7 @@
       <p>Material de apoio bilíngue com definições simples e vídeos em Língua Brasileira de Sinais para estudantes surdos e ouvintes.</p>
       <div class="hero-stats">
         <div class="stat"><div class="stat-num" id="total-count">30</div><div class="stat-label">Termos disponíveis</div></div>
-        <div class="stat"><div class="stat-num">5</div><div class="stat-label">Categorias</div></div>
+        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Categorias</div></div>
         <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Gratuito & acessível</div></div>
       </div>
     </div>
@@ -65,11 +64,9 @@
     <div class="filter-label">Filtrar por categoria</div>
     <div class="filter-pills" id="filterPills">
       <div class="pill active" onclick="setFilter('Todos',this)">Todos</div>
-      <div class="pill" onclick="setFilter('Fundamentos',this)">Fundamentos</div>
-      <div class="pill" onclick="setFilter('Redes',this)">Redes & Internet</div>
-      <div class="pill" onclick="setFilter('Engenharia',this)">Engenharia de Software</div>
-      <div class="pill" onclick="setFilter('Dados',this)">Dados & Banco</div>
-      <div class="pill" onclick="setFilter('IA',this)">IA & Tecnologia</div>
+      <div class="pill" onclick="setFilter('Base de TI',this)">Base de TI</div>
+      <div class="pill" onclick="setFilter('Web e Segurança',this)">Web e Segurança</div>
+      <div class="pill" onclick="setFilter('Engenharia e Acesso',this)">Engenharia e Acesso</div>
     </div>
   </div>
 
@@ -119,12 +116,13 @@
       <div class="tab-content active" id="tab-definicao">
         <div class="definition-box">
           <p id="d-def"></p>
-          <div class="saiba-mais">
+        </div> 
+        <div class="saiba-mais">
             <div class="saiba-mais-icon">💡</div>
             <div><strong>Saiba mais</strong><small id="d-extra"></small></div>
           </div>
-        </div>
       </div>
+     
       <div class="tab-content" id="tab-exemplo">
         <div class="example-box"><p id="d-example"></p></div>
       </div>
@@ -149,54 +147,17 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
           <span>Vídeo em Libras</span>
         </div>
-        <div class="video-placeholder" id="videoPlaceholder" onclick="openVideo()">
-          <div class="play-btn">
-            <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
-          </div>
-        </div>
-        <div class="video-label">
-          <span id="videoTime">0:00 / 0:28</span>
-          <div class="video-controls">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="11 19 2 12 11 5 11 19"/><line x1="22" y1="5" x2="22" y2="19"/></svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="13 19 22 12 13 5 13 19"/><line x1="2" y1="5" x2="2" y2="19"/></svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-          </div>
-        </div>
+        <video id="videoPlayer" controls playsinline
+          style="width:100%;display:block;background:#0f1a2e;aspect-ratio:16/9;"
+          preload="metadata">
+          <source id="videoSource" src="" type="video/mp4">
+          Seu navegador não suporta a reprodução de vídeo.
+        </video>
       </div>
 
       <div class="qr-card">
         <div class="qr-img">
-          <svg viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="1" y="1" width="7" height="7" rx="1" fill="var(--navy)"/>
-            <rect x="2" y="2" width="5" height="5" fill="white"/>
-            <rect x="3" y="3" width="3" height="3" fill="var(--navy)"/>
-            <rect x="13" y="1" width="7" height="7" rx="1" fill="var(--navy)"/>
-            <rect x="14" y="2" width="5" height="5" fill="white"/>
-            <rect x="15" y="3" width="3" height="3" fill="var(--navy)"/>
-            <rect x="1" y="13" width="7" height="7" rx="1" fill="var(--navy)"/>
-            <rect x="2" y="14" width="5" height="5" fill="white"/>
-            <rect x="3" y="15" width="3" height="3" fill="var(--navy)"/>
-            <rect x="9" y="1" width="2" height="2" fill="var(--navy)"/>
-            <rect x="11" y="3" width="2" height="2" fill="var(--navy)"/>
-            <rect x="9" y="5" width="2" height="2" fill="var(--navy)"/>
-            <rect x="11" y="7" width="2" height="2" fill="var(--navy)"/>
-            <rect x="9" y="9" width="2" height="2" fill="var(--navy)"/>
-            <rect x="11" y="11" width="2" height="2" fill="var(--navy)"/>
-            <rect x="13" y="9" width="2" height="2" fill="var(--navy)"/>
-            <rect x="15" y="11" width="2" height="2" fill="var(--navy)"/>
-            <rect x="17" y="9" width="2" height="2" fill="var(--navy)"/>
-            <rect x="19" y="11" width="2" height="2" fill="var(--navy)"/>
-            <rect x="9" y="13" width="2" height="2" fill="var(--navy)"/>
-            <rect x="11" y="15" width="2" height="2" fill="var(--navy)"/>
-            <rect x="13" y="13" width="2" height="2" fill="var(--navy)"/>
-            <rect x="15" y="15" width="2" height="2" fill="var(--navy)"/>
-            <rect x="17" y="17" width="2" height="2" fill="var(--navy)"/>
-            <rect x="19" y="13" width="2" height="2" fill="var(--navy)"/>
-            <rect x="1" y="9" width="2" height="2" fill="var(--navy)"/>
-            <rect x="3" y="11" width="2" height="2" fill="var(--navy)"/>
-            <rect x="5" y="9" width="2" height="2" fill="var(--navy)"/>
-            <rect x="7" y="11" width="2" height="2" fill="var(--navy)"/>
-          </svg>
+          <img src="./img/QR-code.png">
         </div>
         <div class="qr-text">
           <strong>Acesse pelo QR Code</strong>
@@ -249,15 +210,11 @@
 <div id="access-page">
   <div class="access-inner">
     <h2 style="font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:.75rem">Acessibilidade</h2>
-    <p style="font-size:15px;color:var(--gray-600);line-height:1.8">Configure o site de acordo com suas necessidades de leitura.</p>
+    <p style="font-size:15px;color:var(--gray-600);line-height:1.8">Configure o site de acordo com suas necessidades de leitura e navegação.
+      O E-book Tecnológico Bilíngue foi desenvolvido para oferecer uma experiência
+      acessível, inclusiva e intuitiva para todos os usuários.</p>
     <div style="margin-top:1.5rem">
-      <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem">Tamanho da fonte</p>
-      <div class="font-controls">
-        <button class="font-btn" onclick="changeFontSize(14)">A pequeno</button>
-        <button class="font-btn" onclick="changeFontSize(16)">A médio</button>
-        <button class="font-btn" onclick="changeFontSize(18)">A grande</button>
-        <button class="font-btn" onclick="changeFontSize(20)">A maior</button>
-      </div>
+     
     </div>
     <div style="margin-top:1.5rem">
       <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem">Recursos disponíveis</p>
@@ -275,6 +232,33 @@
           <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Todos os termos possuem vídeo em Libras. Use o QR Code para abrir o vídeo diretamente no seu celular.</p>
         </div>
       </div>
+      <div class="about-card">
+      <div class="about-icon">📱</div>
+      <div style="width:100%">
+        <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">
+          QR Code de acesso
+        </h3>
+
+        <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin-bottom:1rem">
+          Escaneie o QR Code para acessar o E-book Tecnológico Bilíngue
+          diretamente no celular e visualizar os vídeos em Libras.
+        </p>
+
+        <div class="qr-card">
+          <div class="qr-img">
+            <img src="./img/QR-code.png" alt="QR Code do site">
+          </div>
+
+          <div class="qr-text">
+            <strong>Acesse pelo celular</strong>
+            <p>
+              Utilize a câmera do celular para abrir rapidamente
+              o E-book e acessar os conteúdos em Libras.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="about-card">
         <div class="about-icon">🔍</div>
         <div>
