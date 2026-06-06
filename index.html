@@ -5,124 +5,163 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E-book Tecnológico Bilíngue | Libras + Português</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <!-- IMPORTA O CSS CORRETAMENTE -->
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
+<!-- ══ NAV ══ -->
+<nav id="mainNav" style="display:none;">
   <div class="nav-inner">
-    <a class="nav-brand" href="#" onclick="showPage('home')">
+    <div class="nav-brand" onclick="showPage('home')">
       <div class="nav-icon">📖</div>
       <div class="nav-title">
         <strong>E-book Tecnológico Bilíngue</strong>
         <span>Libras · Português</span>
       </div>
-    </a>
-    <div class="nav-links">
-      <a href="#" class="active" id="nav-inicio" onclick="showPage('home');return false;">Início</a>
-      <a href="#" id="nav-sobre" onclick="showPage('about');return false;">Sobre</a>
-      <a href="#" id="nav-access" onclick="showPage('access');return false;">Acessibilidade</a>
     </div>
-    <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <div class="nav-links">
+      <a id="nav-inicio" onclick="showPage('home')">Início</a>
+      <a id="nav-sobre"  onclick="showPage('about')">Sobre</a>
+      <a id="nav-access" onclick="showPage('access')">Acessibilidade</a>
+      <a id="nav-admin-link" class="nav-admin-btn" onclick="showPage('admin')" style="display:none;">⚙️ Admin</a>
+      <a id="nav-login-link" onclick="showPage('login')">🔑 Entrar</a>
+    </div>
+    <button class="nav-burger" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
     </button>
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#" onclick="showPage('home');toggleMenu();return false;">🏠 Início</a>
-  <a href="#" onclick="showPage('about');toggleMenu();return false;">ℹ️ Sobre</a>
-  <a href="#" onclick="showPage('access');toggleMenu();return false;">♿ Acessibilidade</a>
+  <a onclick="showPage('home');toggleMenu()">🏠 Início</a>
+  <a onclick="showPage('about');toggleMenu()">ℹ️ Sobre</a>
+  <a onclick="showPage('access');toggleMenu()">♿ Acessibilidade</a>
+  <a id="mob-admin"  onclick="showPage('admin');toggleMenu()"  style="display:none;">⚙️ Painel Admin</a>
+  <a id="mob-login"  onclick="showPage('login');toggleMenu()">🔑 Entrar como Admin</a>
+  <a id="mob-logout" onclick="doLogout();toggleMenu()"style="display:none;">🚪 Sair</a>
 </div>
 
-<!-- ══════════ HOME PAGE ══════════ -->
-<div id="home-page">
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-page" class="page">
+  <div style="min-height:100vh;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,#1e3a5f 100%);display:flex;align-items:center;justify-content:center;padding:2rem;">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="icon">📖</div>
+        <h1>E-book Tecnológico Bilíngue</h1>
+        <p>Libras · Português</p>
+      </div>
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <span class="login-badge">🔐 Área Restrita · Admin</span>
+      </div>
+      <div id="loginError" class="login-error"></div>
+      <div class="field">
+        <label>Usuário</label>
+        <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+      </div>
+      <div class="field">
+        <div class="password-container" style="position: relative; display: flex; align-items: center;">
+        <input type="password" id="loginPass" placeholder="Digite sua senha" style="width: 100%; padding-right: 40px;">
+        
+        <button type="button" id="togglePassword" onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #666; display: flex; align-items: center; justify-content: center; padding: 0;">
+          <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+      </div>
+      <div class="cont"> 
+        <button class="btn-login" onclick="doLogin()">Entrar</button>
+      
+        <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Voltar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home-page" class="page">
   <div class="hero">
     <div class="hero-inner">
       <div class="hero-badge">✋ Libras + Português</div>
       <h1>Vocabulário de <span>TI & Engenharia</span><br>de Software em Libras</h1>
       <p>Material de apoio bilíngue com definições simples e vídeos em Língua Brasileira de Sinais para estudantes surdos e ouvintes.</p>
       <div class="hero-stats">
-        <div class="stat"><div class="stat-num" id="total-count">30</div><div class="stat-label">Termos disponíveis</div></div>
-        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Categorias</div></div>
-        <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Gratuito & acessível</div></div>
+        <div><div class="stat-num" id="total-count">—</div><div class="stat-label">Termos disponíveis</div></div>
+        <div><div class="stat-num">3</div><div class="stat-label">Categorias</div></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Gratuito & acessível</div></div>
       </div>
     </div>
   </div>
-
   <div class="search-bar-wrap">
     <div class="search-bar">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar um termo... (ex: algoritmo, API, banco de dados)" oninput="filterWords()">
+      <input type="text" id="searchInput" placeholder="Buscar um termo… (ex: algoritmo, login, download)" oninput="filterWords()">
     </div>
   </div>
-
   <div class="filter-section">
     <div class="filter-label">Filtrar por categoria</div>
-    <div class="filter-pills" id="filterPills">
+    <div class="filter-pills">
       <div class="pill active" onclick="setFilter('Todos',this)">Todos</div>
       <div class="pill" onclick="setFilter('Base de TI',this)">Base de TI</div>
       <div class="pill" onclick="setFilter('Web e Segurança',this)">Web e Segurança</div>
       <div class="pill" onclick="setFilter('Engenharia e Acesso',this)">Engenharia e Acesso</div>
     </div>
   </div>
-
   <div class="vocab-section">
     <div class="section-header">
       <span class="section-title">Todos os termos</span>
-      <span class="count-badge" id="displayCount">30 termos</span>
+      <span class="count-badge" id="displayCount">carregando…</span>
     </div>
-    <div class="vocab-grid" id="vocabGrid"></div>
+    <div class="vocab-grid" id="vocabGrid">
+      <div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>
+    </div>
     <div class="no-results" id="noResults" style="display:none">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-      <p>Nenhum termo encontrado para a busca.</p>
+      <p>Nenhum termo encontrado.</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════ DETAIL PAGE ══════════ -->
-<div id="detail-page">
-  <div style="background:white; border-bottom: 1px solid var(--gray-200); padding: .75rem 1.5rem;">
-    <div style="max-width:1200px; margin:0 auto;">
+<!-- ══════════ DETAIL ══════════ -->
+<div id="detail-page" class="page">
+  <div style="background:white;border-bottom:1px solid var(--gray-200);padding:.75rem 1.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
       <button class="back-btn" onclick="showPage('home')">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Voltar ao vocabulário
       </button>
     </div>
   </div>
-
   <div class="detail-layout">
     <div class="detail-left">
       <div class="detail-tag" id="d-cat"></div>
       <h2 class="detail-word" id="d-word"></h2>
       <span class="lang-pill">🇧🇷 Português</span>
-      <button class="audio-pill" onclick="speakWord()" title="Ouvir pronúncia">
+      <button class="audio-pill" onclick="speakWord()">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
         Ouvir
       </button>
-
       <div class="tabs">
         <button class="tab-btn active" onclick="setTab('definicao',this)">Definição</button>
-        <button class="tab-btn" onclick="setTab('exemplo',this)">
-          <svg style="width:13px;height:13px;stroke:currentColor;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          Exemplo
-        </button>
+        <button class="tab-btn" onclick="setTab('exemplo',this)">Exemplo</button>
         <button class="tab-btn" onclick="setTab('libras',this)">✋ Ver em Libras</button>
       </div>
-
       <div class="tab-content active" id="tab-definicao">
         <div class="definition-box">
           <p id="d-def"></p>
-        </div> 
+        </div>
         <div class="saiba-mais">
             <div class="saiba-mais-icon">💡</div>
             <div><strong>Saiba mais</strong><small id="d-extra"></small></div>
           </div>
       </div>
-     
       <div class="tab-content" id="tab-exemplo">
         <div class="example-box"><p id="d-example"></p></div>
       </div>
@@ -134,147 +173,219 @@
           </p>
         </div>
       </div>
-
       <div class="related-section">
         <div class="related-title">Termos relacionados</div>
         <div class="related-chips" id="d-related"></div>
       </div>
     </div>
-
     <div class="detail-right">
       <div class="video-card">
         <div class="video-header">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
           <span>Vídeo em Libras</span>
         </div>
-        <video id="videoPlayer" controls playsinline
-          style="width:100%;display:block;background:#0f1a2e;aspect-ratio:16/9;"
-          preload="metadata">
-          <source id="videoSource" src="" type="video/mp4">
-          Seu navegador não suporta a reprodução de vídeo.
-        </video>
+        <div id="videoContainer" style="aspect-ratio:16/9; background:#0f1a2e; position:relative; overflow:hidden; border-radius:8px;">
+          <div id="videoPlayerArea" style="width:100%; height:100%;"></div>
+          
+          <div id="videoPending" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:1.5rem; text-align:center; position:absolute; top:0; left:0;">
+            <div style="width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <p style="color:rgba(255,255,255,.4); font-size:12.5px; line-height:1.5; font-family:Sora,sans-serif;">Vídeo em Libras<br><span style="color:rgba(255,255,255,.2); font-size:11px;">Em breve</span></p>
+          </div>
+        </div>
       </div>
-
       <div class="qr-card">
         <div class="qr-img">
-          <img src="./img/QR-code.png">
+          <svg viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="7" height="7" rx="1" fill="var(--navy)"/><rect x="2" y="2" width="5" height="5" fill="white"/><rect x="3" y="3" width="3" height="3" fill="var(--navy)"/>
+            <rect x="13" y="1" width="7" height="7" rx="1" fill="var(--navy)"/><rect x="14" y="2" width="5" height="5" fill="white"/><rect x="15" y="3" width="3" height="3" fill="var(--navy)"/>
+            <rect x="1" y="13" width="7" height="7" rx="1" fill="var(--navy)"/><rect x="2" y="14" width="5" height="5" fill="white"/><rect x="3" y="15" width="3" height="3" fill="var(--navy)"/>
+            <rect x="9" y="1" width="2" height="2" fill="var(--navy)"/><rect x="11" y="3" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="5" width="2" height="2" fill="var(--navy)"/><rect x="11" y="7" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="9" width="2" height="2" fill="var(--navy)"/><rect x="11" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="13" y="9" width="2" height="2" fill="var(--navy)"/><rect x="15" y="11" width="2" height="2" fill="var(--navy)"/>
+            <rect x="9" y="13" width="2" height="2" fill="var(--navy)"/><rect x="11" y="15" width="2" height="2" fill="var(--navy)"/>
+            <rect x="13" y="13" width="2" height="2" fill="var(--navy)"/><rect x="15" y="15" width="2" height="2" fill="var(--navy)"/>
+          </svg>
         </div>
+       <div class="qr-card">
+        
+        <div class="qr-img">
+          <img src="./img/QR-code.png" alt="QR Code">
+        </div>
+       </div>
         <div class="qr-text">
           <strong>Acesse pelo QR Code</strong>
-          <p>Escaneie para assistir este termo em Libras no seu dispositivo.</p>
+          <p>
+            Escaneie para assistir este termo
+            em Libras no seu dispositivo.
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════ ABOUT PAGE ══════════ -->
-<div id="about-page">
+<!-- ══════════ ADMIN ══════════ -->
+<div id="admin-page" class="page">
+  <div class="admin-header">
+    <div class="admin-header-inner">
+      <h2>⚙️ Painel Administrativo</h2>
+      <div class="admin-header-actions">
+        <span style="color:rgba(255,255,255,.5);font-size:13px;" id="adminUserLabel"></span>
+        <button class="btn-logout" onclick="doLogout()">Sair</button>
+        <button class="btn-new" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Termo
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="admin-stats">
+      <div class="stat-card"><div class="num" id="adm-total">—</div><div class="lbl">Total de termos</div></div>
+      <div class="stat-card"><div class="num" id="adm-com-video">—</div><div class="lbl">Com vídeo</div></div>
+    <div class="stat-card"><div class="num" id="adm-sem-video">—</div><div class="lbl">Sem vídeo</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="lbl">Categorias</div></div>
+    </div>
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <div class="admin-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="adminSearch" placeholder="Buscar termo…" oninput="renderAdminTable()">
+        </div>
+        <select id="adminCatFilter" onchange="renderAdminTable()"
+          style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--gray-700);outline:none;background:white;">
+          <option value="">Todas as categorias</option>
+          <option>Base de TI</option>
+          <option>Web e Segurança</option>
+          <option>Engenharia e Acesso</option>
+        </select>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Termo</th><th>Categoria</th><th>Definição</th><th>Vídeo YT</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="adminTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div id="about-page" class="page">
   <div class="about-inner">
     <h2>Sobre o projeto</h2>
-    <p>O <strong>E-book Tecnológico Bilíngue</strong> é um material de apoio online que reúne os principais termos da área de <strong>Tecnologia da Informação</strong> e <strong>Engenharia de Software</strong>, com definições simples em português e vídeos em Língua Brasileira de Sinais (Libras).</p>
-    <p>O objetivo é tornar o conhecimento tecnológico acessível a estudantes surdos, intérpretes de Libras, professores e qualquer pessoa que queira aprender TI de forma bilíngue e inclusiva.</p>
-
-    <div class="about-card">
-      <div class="about-icon">✋</div>
-      <div>
-        <h3>Acessibilidade em Libras</h3>
-        <p>Cada termo conta com um vídeo explicativo em Libras gravado por intérpretes qualificados, além de QR Code para acesso rápido pelo celular.</p>
-      </div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">📖</div>
-      <div>
-        <h3>Definições simples e claras</h3>
-        <p>As definições foram escritas com linguagem acessível, sem jargões desnecessários, facilitando a compreensão de estudantes de todos os níveis.</p>
-      </div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">🔍</div>
-      <div>
-        <h3>Busca e filtro por categoria</h3>
-        <p>Encontre rapidamente o termo que procura com a busca em tempo real ou filtre por categoria: Fundamentos, Redes, Engenharia, Dados e IA.</p>
-      </div>
-    </div>
-    <div class="about-card">
-      <div class="about-icon">📱</div>
-      <div>
-        <h3>Responsivo para celular e desktop</h3>
-        <p>O site funciona perfeitamente em qualquer dispositivo — do celular à tela grande — sem necessidade de instalar nenhum aplicativo.</p>
-      </div>
-    </div>
+    <p>O <strong>E-book Tecnológico Bilíngue</strong> reúne os principais termos de <strong>TI e Engenharia de Software</strong> com definições simples em português e vídeos em Libras.</p>
+    <div class="about-card"><div class="about-icon">✋</div><div><h3>Acessibilidade em Libras</h3><p>Cada termo conta com vídeo em Libras e QR Code para acesso pelo celular.</p></div></div>
+    <div class="about-card"><div class="about-icon">📖</div><div><h3>Definições simples e claras</h3><p>Linguagem acessível, sem jargões, para estudantes de todos os níveis.</p></div></div>
+    <div class="about-card"><div class="about-icon">🔍</div><div><h3>Busca e filtro por categoria</h3><p>Busca em tempo real e filtro por categoria.</p></div></div>
+    <div class="about-card"><div class="about-icon">📱</div><div><h3>Responsivo para celular e desktop</h3><p>Funciona em qualquer dispositivo, sem instalação.</p></div></div>
   </div>
 </div>
 
-<!-- ══════════ ACESSIBILIDADE PAGE ══════════ -->
-<div id="access-page">
+<!-- ══════════ ACESSIBILIDADE ══════════ -->
+<div id="access-page" class="page">
   <div class="access-inner">
-    <h2 style="font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:.75rem">Acessibilidade</h2>
-    <p style="font-size:15px;color:var(--gray-600);line-height:1.8">Configure o site de acordo com suas necessidades de leitura e navegação.
-      O E-book Tecnológico Bilíngue foi desenvolvido para oferecer uma experiência
-      acessível, inclusiva e intuitiva para todos os usuários.</p>
-    <div style="margin-top:1.5rem">
-     
+    <h2>Acessibilidade</h2>
+    <p style="font-size:15px;color:var(--gray-600);line-height:1.8;margin-bottom:1rem;">Configure o site conforme suas necessidades.</p>
+    <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem;">Tamanho da fonte</p>
+    <div class="font-controls">
+      <button class="font-btn" onclick="changeFontSize(14)">A pequeno</button>
+      <button class="font-btn" onclick="changeFontSize(16)">A médio</button>
+      <button class="font-btn" onclick="changeFontSize(18)">A grande</button>
+      <button class="font-btn" onclick="changeFontSize(20)">A maior</button>
     </div>
-    <div style="margin-top:1.5rem">
-      <p style="font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.75rem">Recursos disponíveis</p>
-      <div class="about-card">
-        <div class="about-icon">🔊</div>
-        <div>
-          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Leitura em voz alta</h3>
-          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Na página de cada termo, clique no botão <strong>"Ouvir"</strong> para ouvir a pronúncia da palavra pelo navegador.</p>
-        </div>
-      </div>
-      <div class="about-card">
-        <div class="about-icon">✋</div>
-        <div>
-          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Vídeos em Libras</h3>
-          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Todos os termos possuem vídeo em Libras. Use o QR Code para abrir o vídeo diretamente no seu celular.</p>
-        </div>
-      </div>
-      <div class="about-card">
-      <div class="about-icon">📱</div>
-      <div style="width:100%">
-        <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">
-          QR Code de acesso
-        </h3>
-
-        <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin-bottom:1rem">
-          Escaneie o QR Code para acessar o E-book Tecnológico Bilíngue
-          diretamente no celular e visualizar os vídeos em Libras.
-        </p>
-
-        <div class="qr-card">
-          <div class="qr-img">
-            <img src="./img/QR-code.png" alt="QR Code do site">
-          </div>
-
-          <div class="qr-text">
-            <strong>Acesse pelo celular</strong>
-            <p>
-              Utilize a câmera do celular para abrir rapidamente
-              o E-book e acessar os conteúdos em Libras.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-      <div class="about-card">
-        <div class="about-icon">🔍</div>
-        <div>
-          <h3 style="font-size:14.5px;font-weight:700;color:var(--navy);margin-bottom:.3rem">Busca por voz</h3>
-          <p style="font-size:13.5px;color:var(--gray-600);line-height:1.6;margin:0">Em dispositivos compatíveis, use o microfone do teclado para ditar o termo que deseja buscar.</p>
-        </div>
-      </div>
-    </div>
+    <div class="about-card"><div class="about-icon">🔊</div><div><h3>Leitura em voz alta</h3><p>Clique em "Ouvir" na página de cada termo.</p></div></div>
+    <div class="about-card"><div class="about-icon">✋</div><div><h3>Vídeos em Libras</h3><p>Use o QR Code para abrir o vídeo no celular.</p></div></div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
+<footer id="mainFooter" style="display:none;">
   <p><strong>E-book Tecnológico Bilíngue</strong> · Libras + Português · Material educacional gratuito</p>
 </footer>
 
-<script src="./script.js"></script>  
+<!-- ══════════ MODAL WORD ══════════ -->
+<div class="modal-overlay" id="wordModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Novo Termo</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-grid">
+        <div class="field form-full">
+          <label>Termo <span>*</span></label>
+          <input type="text" id="fWord" placeholder="Ex: Algoritmo">
+        </div>
+        <div class="field">
+          <label>Categoria <span>*</span></label>
+          <select id="fCat">
+            <option value="">Selecione…</option>
+            <option>Base de TI</option>
+            <option>Web e Segurança</option>
+            <option>Engenharia e Acesso</option>
+          </select>
+        </div>
+        <div class="field">
+            <label>Vídeo</label>
+            <input
+                type="file"
+                id="fVideo"
+                accept="video/mp4,video/webm,video/ogg"
+            >
+            <div class="hint">Selecione um vídeo do seu dispositivo.</div>
+        </div>
+        <div class="field form-full">
+          <label>Definição <span>*</span></label>
+          <textarea id="fDef" placeholder="Definição simples e clara do termo…"></textarea>
+        </div>
+        <div class="field form-full">
+          <label>Saiba mais</label>
+          <textarea id="fExtra" placeholder="Curiosidade ou informação complementar…"></textarea>
+        </div>
+        <div class="field form-full">
+          <label>Exemplo de uso</label>
+          <textarea id="fExample" placeholder="Exemplo prático do termo no dia a dia…"></textarea>
+        </div>
+        <div class="field form-full">
+          <label>Termos relacionados</label>
+          <input type="text" id="fRelated" placeholder="Ex: Programação, Código, Sistema">
+          <div class="hint">Separe com vírgula.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveWord()" id="saveBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL CONFIRM DELETE ══════════ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-modal">
+    <div class="modal-body">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Excluir termo?</h3>
+      <p id="confirmMsg">Esta ação não pode ser desfeita.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn-confirm-del" id="confirmDelBtn">Sim, excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
 </body>
-</html>
