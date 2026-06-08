@@ -47,7 +47,8 @@ function doLogin() {
   // A senha digitada (que agora temos certeza que é 'iverton2026') vira o Token enviado ao Lambda
   authToken = pass;
   isAdmin   = true;
-  document.getElementById('adminUserLabel').textContent = `👤 ${user}`;
+  document.getElementById('adminUserLabel').innerHTML =
+  `<img class="user-avatar" src="./img/fotos.png" alt="Foto do usuário"> ${user}`;
   updateNavForAuth();
   showPage('admin');
   loadWords();
