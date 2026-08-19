@@ -15,6 +15,7 @@ console.log(API_BASE);
 
 /* ═══ STATE ═══ */
 let words         = [];
+let categories    = [];
 let currentFilter = 'Todos';
 let currentSearch = '';
 let currentWord   = null;
@@ -52,6 +53,7 @@ function doLogin() {
   updateNavForAuth();
   showPage('admin');
   loadWords();
+  loadCategories();
   showToast('✅ Login realizado!', 'success');
 }
 
@@ -137,16 +139,230 @@ async function loadWords() {
     document.getElementById('displayCount').textContent = 'Erro ao carregar';
   }
 }
+/* ═══════════════════════════════
+   CATEGORIAS (CORRIGIDO)
+═══════════════════════════════ */
+async function loadCategories() {
+  const result = await apiFetch('categories', {
+    method: 'GET'
+  });
+
+  if (!result.ok) {
+    console.error('Erro ao carregar categorias:', result.data);
+    return;
+  }
+
+  categories = Array.isArray(result.data)
+    ? result.data
+    : (result.data.items || result.data.categories || result.data.Items || []);
+
+ renderCategoryFilters();
+  renderAdminCategoryFilter();
+  renderCategorySelect();
+
+  const totalCategorias = document.getElementById('total-categorias');
+  if (totalCategorias) {
+    totalCategorias.textContent = categories.length;
+  }
+
+  const admCategorias = document.getElementById('adm-categorias');
+  if (admCategorias) {
+    admCategorias.textContent = categories.length;
+  }
+}
+
+// 2. Controle do Modal de Criar Categoria
+function openCatModal() {
+  const input = document.getElementById('newCatName');
+  if (input) input.value = '';
+  document.getElementById('catModal')?.classList.add('open');
+}
+
+function closeCatModal() {
+  document.getElementById('catModal')?.classList.remove('open');
+}
+
+// 3. Salva a nova Categoria via POST na rota 'categories'
+async function saveCategory() {
+  const catInput = document.getElementById('newCatName');
+  const catName = catInput ? catInput.value.trim() : '';
+
+  if (!catName) {
+    showToast('⚠️ Digite o nome da categoria.', 'error');
+    return;
+  }
+
+  const result = await apiFetch('categories', {
+    method: 'POST',
+    body: JSON.stringify({ name: catName })
+  });
+
+  if (result.ok) {
+    showToast('✅ Categoria criada com sucesso!', 'success');
+    closeCatModal();
+    
+    // Atualiza a lista global e limpa os selects
+    await loadCategories();
+    
+    // Deixa a nova categoria selecionada no formulário de palavras
+    const select = document.getElementById('fCat');
+    if (select) select.value = catName;
+  } else {
+    showToast(`❌ ${result.data?.message || 'Erro ao criar categoria.'}`, 'error');
+  }
+}
+/* ═══════════════════════════════
+   EXCLUSÃO DE CATEGORIA
+═══════════════════════════════ */
+/* ═══════════════════════════════
+   EXCLUSÃO DE CATEGORIA (CORRIGIDO)
+═══════════════════════════════ */
+
+let _delCatId = null;
+
+// 1. Recebe o ID único diretamente da lista
+function askDeleteCategory(catId, catName) {
+  if (!catId) return;
+
+  _delCatId = catId;
+  
+  const msgEl = document.getElementById('confirmMsg');
+  if (msgEl) {
+    msgEl.textContent = `Deseja realmente excluir a categoria "${catName}"?`;
+  }
+
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.classList.add('open');
+
+  const btnConfirm = document.getElementById('confirmDelBtn');
+  if (btnConfirm) {
+    btnConfirm.onclick = async () => {
+      await deleteCategory(_delCatId);
+    };
+  }
+}
+
+// 2. Faz o DELETE na rota 'categories/ID' sem a barra inicial
+async function deleteCategory(catId) {
+  closeConfirm();
+
+  const result = await apiFetch(`categories/${catId}`, {
+    method: 'DELETE'
+  });
+
+  if (result.ok) {
+    showToast('🗑 Categoria excluída com sucesso!', 'success');
+    await loadCategories();
+    await loadWords();
+    renderCategoriesList(); // Atualiza a lista visual do modal
+  } else {
+    console.error('Erro na exclusão:', result.data);
+    showToast(`❌ ${result.data?.message || 'Erro ao excluir categoria.'}`, 'error');
+  }
+}
+
+// 3. Controle dos Modais
+function openManageCatsModal() {
+  renderCategoriesList();
+  document.getElementById('manageCatsModal')?.classList.add('open');
+}
+
+function closeManageCatsModal() {
+  document.getElementById('manageCatsModal')?.classList.remove('open');
+}
+
+// 4. Renderiza a lista passando o ID e o Nome
+function renderCategoriesList() {
+  const container = document.getElementById('catsListContainer');
+  if (!container) return;
+
+  if (!categories || !categories.length) {
+    container.innerHTML = '<p style="text-align:center; padding:15px; color:#888;">Nenhuma categoria cadastrada.</p>';
+    return;
+  }
+
+  container.innerHTML = categories.map(cat => `
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #eee;">
+      <span style="font-weight: 500;">${escHtml(cat.name)}</span>
+      <button type="button" class="btn-del" style="padding: 4px 10px; font-size: 0.8rem;" onclick="askDeleteCategory('${cat.id}', '${escAttr(cat.name)}')">
+        🗑 Excluir
+      </button>
+    </div>
+  `).join('');
+}
+
+// 5. Renderiza os filtros de categoria na tela inicial
+function renderCategoryFilters() {
+  const container = document.getElementById('categoryFilters');
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="pill active" onclick="setFilter('Todos', this)">
+      Todos
+    </div>
+    ${categories.map(cat => `
+      <div class="pill" onclick="setFilter('${escAttr(cat.name)}', this)">
+        ${escHtml(cat.name)}
+      </div>
+    `).join('')}
+  `;
+}
+function renderAdminCategoryFilter() {
+  const select = document.getElementById('adminCatFilter');
+
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">Todas as categorias</option>
+    ${categories.map(cat => `
+      <option value="${escHtml(cat.name)}">
+        ${escHtml(cat.name)}
+      </option>
+    `).join('')}
+  `;
+}
+function renderCategorySelect() {
+  const select = document.getElementById('fCat');
+
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">Selecione…</option>
+    ${categories.map(cat => `
+      <option value="${escHtml(cat.name)}">
+        ${escHtml(cat.name)}
+      </option>
+    `).join('')}
+  `;
+}
+// Garante o fechamento correto do modal de confirmação
+function closeConfirm() {
+  document.getElementById('confirmModal')?.classList.remove('open');
+  _delCatId = null;
+  _delId = null;
+}
 
 /* ═══════════════════════════════
    HOME
 ═══════════════════════════════ */
 function updateStats() {
   document.getElementById('total-count').textContent = words.length || '—';
+
+  const totalCategorias = document.getElementById('total-categorias');
+  if (totalCategorias) {
+    totalCategorias.textContent = categories.length || '—';
+  }
+
   if (isAdmin) {
-    document.getElementById('adm-total').textContent     = words.length;
-    document.getElementById('adm-com-video').textContent = words.filter(w => w.video).length
-    document.getElementById('adm-sem-video').textContent = words.filter(w => !w.video).length
+    document.getElementById('adm-total').textContent = words.length;
+    document.getElementById('adm-com-video').textContent = words.filter(w => w.video).length;
+    document.getElementById('adm-sem-video').textContent = words.filter(w => !w.video).length;
+
+    const admCategorias = document.getElementById('adm-categorias');
+    if (admCategorias) {
+      admCategorias.textContent = categories.length || '—';
+    }
   }
 }
 
@@ -492,4 +708,5 @@ function escAttr(s) { return String(s || '').replace(/'/g,"\\'"); }
 ═══════════════════════════════ */
 updateNavForAuth();
 showPage('home');
+loadCategories();
 loadWords();

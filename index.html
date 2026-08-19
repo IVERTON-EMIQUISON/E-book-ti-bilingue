@@ -92,7 +92,10 @@
       <p>Material de apoio bilíngue com definições simples e vídeos em Língua Brasileira de Sinais para estudantes surdos e ouvintes.</p>
       <div class="hero-stats">
         <div><div class="stat-num" id="total-count">—</div><div class="stat-label">Termos disponíveis</div></div>
-        <div><div class="stat-num">3</div><div class="stat-label">Categorias</div></div>
+        <div class="">
+          <div class="stat-num" id="adm-categorias">—</div>
+          <div class="stat-label">Categorias</div>
+        </div>
         <div><div class="stat-num">100%</div><div class="stat-label">Gratuito & acessível</div></div>
       </div>
     </div>
@@ -105,11 +108,8 @@
   </div>
   <div class="filter-section">
     <div class="filter-label">Filtrar por categoria</div>
-    <div class="filter-pills">
+    <div class="filter-pills" id="categoryFilters">
       <div class="pill active" onclick="setFilter('Todos',this)">Todos</div>
-      <div class="pill" onclick="setFilter('Base de TI',this)">Base de TI</div>
-      <div class="pill" onclick="setFilter('Web e Segurança',this)">Web e Segurança</div>
-      <div class="pill" onclick="setFilter('Engenharia e Acesso',this)">Engenharia e Acesso</div>
     </div>
   </div>
   <div class="vocab-section">
@@ -247,21 +247,19 @@
       <div class="stat-card"><div class="num" id="adm-total">—</div><div class="lbl">Total de termos</div></div>
       <div class="stat-card"><div class="num" id="adm-com-video">—</div><div class="lbl">Com vídeo</div></div>
     <div class="stat-card"><div class="num" id="adm-sem-video">—</div><div class="lbl">Sem vídeo</div></div>
-      <div class="stat-card"><div class="num">3</div><div class="lbl">Categorias</div></div>
-    </div>
+      <div class="stat-card"><div class="num" id="total-categorias">—</div><div class="lbl">Categorias</div></div>
+  </div>
     <div class="admin-table-wrap">
       <div class="admin-table-header">
         <div class="admin-search">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="text" id="adminSearch" placeholder="Buscar termo…" oninput="renderAdminTable()">
         </div>
-        <select id="adminCatFilter" onchange="renderAdminTable()"
+          <select id="adminCatFilter"
+          onchange="renderAdminTable()"
           style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--gray-700);outline:none;background:white;">
           <option value="">Todas as categorias</option>
-          <option>Base de TI</option>
-          <option>Web e Segurança</option>
-          <option>Engenharia e Acesso</option>
-        </select>
+      </select>
       </div>
       <table>
         <thead>
@@ -361,14 +359,15 @@
           <label>Termo <span>*</span></label>
           <input type="text" id="fWord" placeholder="Ex: Algoritmo">
         </div>
+        <!-- 1. Substitua o grupo da Categoria dentro do formulário do termo por este: -->
         <div class="field">
-          <label>Categoria <span>*</span></label>
-          <select id="fCat">
-            <option value="">Selecione…</option>
-            <option>Base de TI</option>
-            <option>Web e Segurança</option>
-            <option>Engenharia e Acesso</option>
-          </select>
+          <label for="fCat">Categoria <span>*</span></label>
+          <div style="display: flex; gap: 8px;">
+            <select id="fCat" required style="flex: 1;">
+              <option value="">Selecione…</option>
+            </select>
+            <button type="button" class="btn-edit" onclick="openCatModal()">+ Nova</button>
+            </div>
         </div>
         <div class="field">
             <label>Vídeo</label>
@@ -398,6 +397,49 @@
         </div>
       </div>
     </div>
+      <!-- MODAL: NOVA CATEGORIA -->
+      <div class="modal-overlay" id="catModal">
+        <div class="modal modal-sm">
+          <div class="modal-header">
+            <h3>Nova Categoria</h3>
+            <button type="button" class="btn-close" onclick="closeCatModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="field">
+              <label for="newCatName">Nome da Categoria <span>*</span></label>
+              <input type="text" id="newCatName" placeholder="Ex: Redes de Computadores" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-edit" id="gerencia" onclick="openManageCatsModal(); closeCatModal();">⚙️ Gerenciar</button>
+            <div class="modal-footer-right">
+              <button type="button" class="btn-del" onclick="closeCatModal()">Cancelar</button>
+              <button type="button" class="btn-save" onclick="saveCategory()">Salvar Categoria</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- MODAL: GERENCIAR CATEGORIAS -->
+      <div class="modal-overlay" id="manageCatsModal">
+        <div class="modal modal-md">
+          <div class="modal-header">
+            <h3>Gerenciar Categorias</h3>
+            <button type="button" class="btn-close" onclick="closeManageCatsModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-desc">
+              Excluir uma categoria remove o vínculo dos termos existentes, mas não apaga os termos da plataforma.
+            </p>
+            <div id="catsListContainer" class="cats-list-container">
+              <!-- Preenchido via JS -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="closeManageCatsModal()">Fechar</button>
+            <button type="button" class="btn-save" onclick="closeManageCatsModal(); openCatModal();">+ Nova Categoria</button>
+          </div>
+        </div>
+      </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn-save" onclick="saveWord()" id="saveBtn">

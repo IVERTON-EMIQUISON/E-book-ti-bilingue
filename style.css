@@ -479,7 +479,7 @@
     transition: all .2s;
   }
   /* ══ MODAL ══ */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 500; display: none; align-items: center; justify-content: center; padding: 2rem 2rem ; }
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
   .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; background: white; z-index: 1; }
@@ -509,7 +509,101 @@
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast.success { background: var(--teal-dark); }
   .toast.error   { background: var(--red); }
+  /* ═══════════════════════════════
+   MODAIS & ESTILIZAÇÃO PADRÃO
+═══════════════════════════════ */
 
+/* Overlay com Z-Index alto para ficar por cima do modal principal */
+.modal-overlay {
+  z-index: 1000 !important;
+}
+
+/* Tamanhos de Modal */
+.modal-sm { max-width: 440px !important; width: 90%; }
+.modal-md { max-width: 520px !important; width: 90%; }
+
+/* Cabeçalho do Modal com botão X */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Descrição e Corpo */
+.modal-desc {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+/* Rodapé Organizado */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.modal-footer-right {
+  display: flex;
+  gap: 10px;
+}
+#gerencia {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #1e293b;
+}
+/* Lista de Categorias */
+.cats-list-container {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.cat-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cat-item-row:last-child {
+  border-bottom: none;
+}
   /* ══ RESPONSIVE ══ */
   @media (max-width: 768px) {
     .nav-links { display: none; }
